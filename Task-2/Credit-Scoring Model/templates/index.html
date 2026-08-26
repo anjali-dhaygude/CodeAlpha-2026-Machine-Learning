@@ -1,1 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Credit Scoring Model</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .container {
+            width: 900px;
+            max-width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 34px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .inputBox {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: white;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        input {
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        input::placeholder {
+            color: #ddd;
+        }
+
+        button {
+            margin-top: 30px;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(to right, #00c9ff, #92fe9d);
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+        }
+
+        .result {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .result h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .score {
+            font-size: 55px;
+            font-weight: bold;
+            color: #00ff99;
+        }
+
+        .status {
+            font-size: 25px;
+            font-weight: 600;
+            margin-top: 10px;
+            color: white;
+        }
+
+        .probability {
+            color: #ddd;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        .progress {
+            width: 100%;
+            height: 18px;
+            background: #ddd;
+            border-radius: 50px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            background: linear-gradient(to right, #00ff99, #00c9ff);
+            transition: 1s;
+        }
+
+        .error {
+            margin-top: 20px;
+            color: #ff8080;
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #ddd;
+            font-size: 14px;
+        }
+
+        @media(max-width: 768px) {
+
+            .container {
+                width: 95%;
+                padding: 25px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>💳 Credit Scoring Model</h1>
+
+
+    <!-- FORM START -->
+
+    <form action="/predict" method="POST">
+
+        <div class="grid">
+
+            <!-- AGE -->
+
+            <div class="inputBox">
+
+                <label>Age</label>
+
+                <input
+                    type="number"
+                    name="age"
+                    placeholder="Enter Age"
+                    value="{{ age or '' }}"
+                    min="18"
+                    required>
+
+            </div>
+
+
+            <!-- INCOME -->
+
+            <div class="inputBox">
+
+                <label>Monthly Income</label>
+
+                <input
+                    type="number"
+                    name="income"
+                    placeholder="Enter Income"
+                    value="{{ income or '' }}"
+                    min="0"
+                    required>
+
+            </div>
+
+
+            <!-- LOAN -->
+
+            <div class="inputBox">
+
+                <label>Loan Amount</label>
+
+                <input
+                    type="number"
+                    name="loan"
+                    placeholder="Enter Loan Amount"
+                    value="{{ loan or '' }}"
+                    min="0"
+                    required>
+
+            </div>
+
+
+            <!-- DEBT -->
+
+            <div class="inputBox">
+
+                <label>Total Debt</label>
+
+                <input
+                    type="number"
+                    name="debt"
+                    placeholder="Enter Debt"
+                    value="{{ debt or '' }}"
+                    min="0"
+                    required>
+
+            </div>
+
+
+            <!-- EMPLOYMENT -->
+
+            <div class="inputBox">
+
+                <label>Employment Years</label>
+
+                <input
+                    type="number"
+                    name="employment"
+                    placeholder="Experience"
+                    value="{{ employment or '' }}"
+                    min="0"
+                    required>
+
+            </div>
+
+
+            <!-- CREDIT HISTORY -->
+
+            <div class="inputBox">
+
+                <label>Credit History (Years)</label>
+
+                <input
+                    type="number"
+                    name="history"
+                    placeholder="Credit History"
+                    value="{{ history or '' }}"
+                    min="0"
+                    required>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTON -->
+
+        <button type="submit">
+
+            Predict Credit Score
+
+        </button>
+
+    </form>
+
+    {% if prediction %}
+        <div class="result">
+            <h2>Prediction Result</h2>
+            <p>{{ prediction }}</p>
+        </div>
+    {% endif %}
+
+    <!-- FORM END -->
+
+
+    <!-- RESULT -->
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', ()=> {
+  document.querySelectorAll('.bar').forEach(el=>{
+    const p = el.dataset.probability;
+    if (p) el.style.width = p + '%';
+  });
+});
+</script>
+
+</body>
+
+</html>
